@@ -1,0 +1,27 @@
+{
+  "name": "json-to-html-css",
+  "version": "1.0.0",
+  "description": "Converter Javascript object to html JSON structure styled in html + css",
+  "main": "index.js",
+  "scripts": {
+    "build": "gulp",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/AndreAntunesVieira/json-to-html-css.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/AndreAntunesVieira/json-to-html-css/issues"
+  },
+  "homepage": "https://github.com/AndreAntunesVieira/json-to-html-css#readme",
+  "devDependencies": {
+    "gulp": "^4.0.2",
+    "gulp-typescript": "^6.0.0-alpha.1",
+    "gulp-uglify-es": "^2.0.0",
+    "prettier": "^1.19.1",
+    "typescript": "^3.7.3"
+  }
+}
