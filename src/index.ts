@@ -38,6 +38,7 @@ code .number {color: #6997C0;}
 code .boolean {color: #cd7a1c;font-weight: bold;}
 code .null {color: #cd7a1c;font-weight: bold;}
 code .key {color: #9776ae;font-weight: bold;}
+code .main { margin-left: 24px; }
 </style>
 </head>
 <body>
