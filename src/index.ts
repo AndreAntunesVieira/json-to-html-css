@@ -1,14 +1,34 @@
 const valuePattern = /("(\\u[a-zA-Z0-9]{4}|\\[^u]|[^\\"])*"(\s*:)?|\b(true|false|null)\b|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?)/g
 
 export default function jsonToHtml(content: any) {
-  const json = JSON.stringify(content, undefined, 1)
+  const json = jsonToHtmlCode(content)
+  return getJsonToHtmlTemplate(json)
+}
+
+export const jsonToHtmlCode = (content: string) => {
+  let json = JSON.stringify(content, undefined, 1)
     .replace(/&/g, '&amp;')
     .replace(/</g, '&lt;')
     .replace(/>/g, '&gt;')
     .replace(valuePattern, valueReplacer)
     .replace(/\n/g, '<br />')
     .replace(/  /g, '&nbsp;&nbsp;')
-  return getJsonToHtmlTemplate(json)
+  if (/^{/.test(json) && /}$/.test(json)) {
+    const mainContent = json.substr(1, json.length - 2).replace('<br />', '')
+    json = json.substr(0, 1) + `<div style="margin-left: 8px">${mainContent}</div>` + json.substr(-1)
+  }
+  return `<code>${json}</code>`
+}
+
+export const styles = {
+  darcula: `
+code {word-spacing: 2px;background: #2c2c2c;color: #AAA;font-size:16px; display: block;}
+code pre {outline: 1px solid #ccc;padding: 5px;margin: 5px;}
+code .string {color: #6b8753;}
+code .number {color: #6997C0;}
+code .boolean {color: #cd7a1c;font-weight: bold;}
+code .null {color: #cd7a1c;font-weight: bold;}
+code .key {color: #9776ae;font-weight: bold;}`,
 }
 
 const valueReplacer = (match: string) => '<span class="' + getClassName(match) + '">' + match + '</span>'
@@ -21,28 +41,15 @@ const getClassName = (match: string) => {
   return 'number'
 }
 
-const getJsonToHtmlTemplate = (json: string) => {
-  if (/^{/.test(json) && /}$/.test(json)) {
-    const mainContent = json.substr(1, json.length - 2).replace('<br />', '')
-    json = json.substr(0, 1) + `<div class="main">${mainContent}</div>` + json.substr(-1)
-  }
-  return `
+const getJsonToHtmlTemplate = (json: string) => `
 <html>
 <head>
 <style>
-body{margin: 0;background: #2c2c2c;color: #AAA;font-size:16px;}
-code {word-spacing: 2px;min-height: 100vh;}
-code pre {outline: 1px solid #ccc;padding: 5px;margin: 5px;}
-code .string {color: #6b8753;}
-code .number {color: #6997C0;}
-code .boolean {color: #cd7a1c;font-weight: bold;}
-code .null {color: #cd7a1c;font-weight: bold;}
-code .key {color: #9776ae;font-weight: bold;}
-code .main { margin-left: 8px; }
+body{margin: 0;background: #2c2c2c;color: #AAA;font-size:16px;min-height: 100vh; }
+${styles.darcula}
 </style>
 </head>
 <body>
-<code>${json}</code>
+${json}
 </body>
 </html>`
-}
