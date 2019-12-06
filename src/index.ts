@@ -14,14 +14,19 @@ export default function jsonToHtml(content: any) {
 const valueReplacer = (match: string) => '<span class="' + getClassName(match) + '">' + match + '</span>'
 
 const getClassName = (match: string) => {
-  if (/:$/.test(match) && /^"/.test(match)) return 'key'
-  if (/:$/.test(match)) return 'string'
+  if (/^"/.test(match) && /:$/.test(match)) return 'key'
+  if (/^"/.test(match)) return 'string'
   if (/true|false/.test(match)) return 'boolean'
   if (/null/.test(match)) return 'null'
   return 'number'
 }
 
-const getJsonToHtmlTemplate = (json: string) => `
+const getJsonToHtmlTemplate = (json: string) => {
+  if (/^{/.test(json) && /}$/.test(json)) {
+    const mainContent = json.substr(1, json.length - 2).replace('<br />', '')
+    json = json.substr(0, 1) + `<div class="main">${mainContent}</div>` + json.substr(-1)
+  }
+  return `
 <html>
 <head>
 <style>
@@ -39,3 +44,4 @@ code .key {color: #9776ae;font-weight: bold;}
 <code>${json}</code>
 </body>
 </html>`
+}
